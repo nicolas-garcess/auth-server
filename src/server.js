@@ -1,8 +1,8 @@
 const express = require('express');
+require('dotenv').config();
 
 const app = express();
 
-console.log(process.env.PORT);
 // Settings
 app.set('port', process.env.PORT || 3500);
 
