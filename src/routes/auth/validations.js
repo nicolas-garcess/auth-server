@@ -26,7 +26,14 @@ const schemaStudentSignUp = Joi.object({
   activo: Joi.boolean().required(),
 });
 
+const schemaUserLogin = Joi.object({
+  email: Joi.string().min(6).max(50).required()
+    .email(),
+  password: Joi.string().min(6).max(30).required(),
+});
+
 module.exports = {
   schemaResearcherSignUp,
   schemaStudentSignUp,
+  schemaUserLogin,
 };

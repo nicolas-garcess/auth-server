@@ -1,7 +1,8 @@
 const router = require('express').Router();
 const { Researcher, Student } = require('../../user');
-const { schemaResearcherSignUp, schemaStudentSignUp } = require('./validations');
-const { hashPassword } = require('./utils');
+const { findResearcherByEmail, findStudentByEmail } = require('./queries');
+const { schemaResearcherSignUp, schemaStudentSignUp, schemaUserLogin } = require('./validations');
+const { hashPassword, isAValidPassword } = require('./utils');
 
 router.post('/singup-researcher', async (req, res) => {
   const { error } = schemaResearcherSignUp.validate(req.body);
@@ -63,6 +64,58 @@ router.post('/singup-student', async (req, res) => {
       error: err,
     });
   }
+});
+
+router.post('/login', async (req, res) => {
+  const { error } = schemaUserLogin.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({
+      message: 'Wrong body request',
+      error: error.details[0].message,
+    });
+  }
+
+  const student = await findStudentByEmail(req.body.email);
+  let validPassword = false;
+
+  if (student !== null) {
+    validPassword = await isAValidPassword(req.body.password, student.contrasena);
+
+    if (!validPassword) {
+      return res.status(404).json({
+        message: 'Credenciales inválidas',
+        error: true,
+      });
+    }
+
+    return res.status(200).json({
+      message: 'Bienvenido',
+      error: null,
+    });
+  }
+
+  const researcher = await findResearcherByEmail(req.body.email);
+
+  if (researcher !== null) {
+    validPassword = await isAValidPassword(req.body.password, researcher.contrasena);
+
+    if (!validPassword) {
+      return res.status(404).json({
+        message: 'Credenciales inválidas',
+        error: true,
+      });
+    }
+    return res.status(200).json({
+      message: 'Bienvenido',
+      error: null,
+    });
+  }
+
+  return res.status(404).json({
+    message: 'Credenciales inválidas',
+    error: true,
+  });
 });
 
 module.exports = router;
