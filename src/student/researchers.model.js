@@ -37,7 +37,7 @@ const ResearcherSchema = new Schema({
     type: String,
     required: true,
     minLength: 6,
-    maxLength: 30,
+    maxLength: 100,
   },
   horasDedicacion: {
     type: Number,

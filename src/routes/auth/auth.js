@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { Student } = require('../../student');
 const { schemaStudentSignUp } = require('./validations');
+const { hashPassword } = require('./utils');
 
 router.post('/singup-student', async (req, res) => {
   const { error } = schemaStudentSignUp.validate(req.body);
@@ -12,8 +13,10 @@ router.post('/singup-student', async (req, res) => {
     });
   }
 
+  const hashedPassword = await hashPassword(req.body.contrasena, 10);
   const student = new Student({
     ...req.body,
+    contrasena: hashedPassword,
   });
 
   try {
@@ -26,7 +29,7 @@ router.post('/singup-student', async (req, res) => {
   } catch (err) {
     return res.status(400).json({
       message: 'Something went wrong',
-      error,
+      error: err,
     });
   }
 });

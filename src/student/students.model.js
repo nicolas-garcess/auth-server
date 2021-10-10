@@ -49,7 +49,7 @@ const StudentSchema = new Schema({
     type: String,
     required: true,
     minLength: 6,
-    maxLength: 30,
+    maxLength: 100,
   },
   fechaIngreso: {
     type: Date,
