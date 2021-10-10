@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Researcher, Student } = require('../../user');
 const { findResearcherByEmail, findStudentByEmail } = require('./queries');
 const { schemaResearcherSignUp, schemaStudentSignUp, schemaUserLogin } = require('./validations');
-const { hashPassword, isAValidPassword } = require('./utils');
+const { createToken, hashPassword, isAValidPassword } = require('./utils');
 
 router.post('/singup-researcher', async (req, res) => {
   const { error } = schemaResearcherSignUp.validate(req.body);
@@ -89,7 +89,9 @@ router.post('/login', async (req, res) => {
       });
     }
 
-    return res.status(200).json({
+    const token = createToken(student);
+
+    return res.status(200).header('auth-token', token).json({
       message: 'Bienvenido',
       error: null,
     });
@@ -106,7 +108,10 @@ router.post('/login', async (req, res) => {
         error: true,
       });
     }
-    return res.status(200).json({
+
+    const token = createToken(researcher);
+
+    return res.status(200).header('auth-token', token).json({
       message: 'Bienvenido',
       error: null,
     });
