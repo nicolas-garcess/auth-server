@@ -51,6 +51,10 @@ const StudentSchema = new Schema({
     minLength: 6,
     maxLength: 30,
   },
+  fechaIngreso: {
+    type: Date,
+    required: true,
+  },
   activo: {
     type: Boolean,
     required: true,
