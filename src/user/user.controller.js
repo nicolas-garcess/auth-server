@@ -92,9 +92,13 @@ const login = async (req, res) => {
 
     const token = encode(student, 'student');
 
-    return res.status(200).header('auth-token', token).json({
+    return res.status(200).header('auth', token).json({
       message: 'Bienvenido',
       error: null,
+      id: student.id,
+      email: student.email,
+      rol: 'student',
+      token,
     });
   }
 
@@ -115,6 +119,10 @@ const login = async (req, res) => {
     return res.status(200).header('auth-token', token).json({
       message: 'Bienvenido',
       error: null,
+      id: researcher.id,
+      email: researcher.email,
+      rol: 'researcher',
+      token,
     });
   }
 
