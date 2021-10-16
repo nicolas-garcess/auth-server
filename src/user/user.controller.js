@@ -116,7 +116,7 @@ const login = async (req, res) => {
 
     const token = encode(researcher, 'researcher');
 
-    return res.status(200).header('auth-token', token).json({
+    return res.status(200).header('auth', token).json({
       message: 'Bienvenido',
       error: null,
       id: researcher.id,
